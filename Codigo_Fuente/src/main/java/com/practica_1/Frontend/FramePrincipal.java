@@ -75,11 +75,7 @@ public class FramePrincipal extends JFrame {
 
         //Se configuran los paneles
         pnl1.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
-        //pnl1.setBackground(Color.BLUE);
-        pnl1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         pnl2.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
-        //pnl2.setBackground(Color.BLUE);
-        pnl2.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         //Se genera el orden en que ira todo
         GroupLayout layout = new GroupLayout(getContentPane());
@@ -123,7 +119,8 @@ public class FramePrincipal extends JFrame {
         pnl1.removeAll();
         pnl2.removeAll();
         JTextArea txa = new JTextArea();
-        txa.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
+        txa.setPreferredSize(new Dimension(SIZE_PANEL - 6, SIZE_PANEL - 6));
+        txa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         pnl1.add(txa);
         pnl2.setLayout(new GridLayout(recuadro.length, recuadro[0].length));
         for (int i = 0; i < recuadro.length; i++) {
