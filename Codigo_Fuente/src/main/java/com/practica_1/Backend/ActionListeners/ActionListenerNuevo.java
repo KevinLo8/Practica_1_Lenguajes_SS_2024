@@ -14,7 +14,7 @@ public class ActionListenerNuevo implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        framePrincipal.PreguntarTamaño();
+        framePrincipal.preguntarTamaño();
     }
 
 }

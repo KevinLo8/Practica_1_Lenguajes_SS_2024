@@ -8,9 +8,17 @@ import com.practica_1.Backend.ActionListeners.ActionListenerImagen;
 import com.practica_1.Backend.ActionListeners.ActionListenerNuevo;
 import com.practica_1.Backend.ActionListeners.ActionListenerReporte;
 import com.practica_1.Backend.ActionListeners.ActionListenerSalir;
+import com.practica_1.Backend.AutomataAnalizador.AutomataAnalizador;
+import com.practica_1.Backend.Recuadro.Recuadro;
 import com.practica_1.Frontend.JDialog.DialogEspacio;
 
 public class FramePrincipal extends JFrame {
+
+    private AutomataAnalizador analizador;
+    private Thread hiloAnalizador;
+    private JLabel[][] recuadro;
+
+    private Recuadro[] token;
 
     private DialogEspacio dialogEspacio;
     private JPanel pnl1, pnl2;
@@ -25,6 +33,10 @@ public class FramePrincipal extends JFrame {
      * Se crea el constructor del frame
      */
     public FramePrincipal(){
+
+        token = new Recuadro[0];
+        analizador = new AutomataAnalizador(this, token);
+        hiloAnalizador = new Thread(analizador);
 
         initComponentes();
 
@@ -107,7 +119,15 @@ public class FramePrincipal extends JFrame {
         return SIZE_PANEL;
     }
 
-    public void PreguntarTamaño() {
+    public JLabel[][] getRecuadro() {
+        return recuadro;
+    }
+
+    public void setToken(Recuadro[] recuadros) {
+        this.token = recuadros;
+    }
+
+    public void preguntarTamaño() {
         if (dialogEspacio != null) {
             dialogEspacio.dispose();    
         }
@@ -116,6 +136,7 @@ public class FramePrincipal extends JFrame {
     }
 
     public void crearEdicion(JLabel[][] recuadro) {
+        this.recuadro = recuadro;
         pnl1.removeAll();
         pnl2.removeAll();
         JTextArea txa = new JTextArea();
@@ -129,8 +150,20 @@ public class FramePrincipal extends JFrame {
 
             }
         }
+
+        analizador.setTxa(txa);
+        hiloAnalizador.start();
+
         repaint();
         validate();
+    }
+
+    public void imprimirTamaño(){
+        System.out.println(token.length);
+    }
+
+    public void pintarRecuadros(Recuadro[] token2) {
+
     }
 
 }
