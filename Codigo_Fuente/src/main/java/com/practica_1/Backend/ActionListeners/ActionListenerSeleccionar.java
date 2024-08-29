@@ -1,10 +1,8 @@
 package com.practica_1.Backend.ActionListeners;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class ActionListenerSeleccionar implements ActionListener {
 
@@ -16,9 +14,12 @@ public class ActionListenerSeleccionar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(fileChooser);
-        txf1.setText(fileChooser.getSelectedFile().getPath());
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.showOpenDialog(fileChooser);
+            txf1.setText(fileChooser.getSelectedFile().getPath());
+        } catch (NullPointerException ex) {
+        }
     }
 
 }

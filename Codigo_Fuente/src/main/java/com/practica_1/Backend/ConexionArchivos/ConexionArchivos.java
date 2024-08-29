@@ -12,7 +12,7 @@ public class ConexionArchivos {
     public String leerArchivo(String path) throws ArchivoInexistenteException, IOException {
 
         File archivo = new File(path);
-        String texto = null;
+        String texto = "";
 
         if (!archivo.exists()) {
             throw new ArchivoInexistenteException("Archivo Inexistente");
@@ -22,7 +22,7 @@ public class ConexionArchivos {
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String linea = bufferedReader.readLine();
             while(linea != null) {
-                texto = texto + linea;
+                texto = texto + linea + "\n";
                 linea = bufferedReader.readLine();
             }
         } catch (IOException e) {

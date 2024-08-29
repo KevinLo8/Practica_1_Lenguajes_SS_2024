@@ -26,7 +26,8 @@ public class FramePrincipal extends JFrame {
     private DialogEspacio dialogEspacio;
     private DialogSeleccionArchivo dialogSeleccionArchivo;
     private DialogBorrarTexto dialogBorrarTexto;
-    private JPanel pnl1, pnl2;
+    private JPanel pnl1;
+    private JScrollPane scp1;
     private JMenuItem jMI1, jMI2, jMI3, jMI4, jMI5;
     private JTextArea txa;
 
@@ -75,7 +76,7 @@ public class FramePrincipal extends JFrame {
         jMI5 = new JMenuItem("Generar imagen");
 
         //Se deshabilita el boton para cargar archivos
-        //jMI2.setEnabled(false);
+        jMI2.setEnabled(false);
 
         //Se agregan los listeners a los botones
         jMI1.addActionListener(new ActionListenerNuevo(this)); 
@@ -96,11 +97,13 @@ public class FramePrincipal extends JFrame {
 
         //Se generan los paneles principales
         pnl1 = new JPanel();
-        pnl2 = new JPanel();
+        scp1 = new JScrollPane();
 
         //Se configuran los paneles
         pnl1.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
-        pnl2.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
+        pnl1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        scp1.setPreferredSize(new Dimension(SIZE_PANEL, SIZE_PANEL));
+        scp1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         //Se genera el orden en que ira todo
         GroupLayout layout = new GroupLayout(getContentPane());
@@ -110,8 +113,8 @@ public class FramePrincipal extends JFrame {
             layout.createSequentialGroup()
                 .addContainerGap(GAP, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(scp1)
                     .addComponent(pnl1)
-                    .addComponent(pnl2)
                 )
                 .addContainerGap(GAP, Short.MAX_VALUE)
         );
@@ -120,9 +123,9 @@ public class FramePrincipal extends JFrame {
             layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER))
                 .addContainerGap(GAP, Short.MAX_VALUE)
-                .addComponent(pnl1)
+                .addComponent(scp1)
                 .addGap(GAP * 2)
-                .addComponent(pnl2)
+                .addComponent(pnl1)
                 .addContainerGap(GAP, Short.MAX_VALUE)
         );
 
@@ -146,18 +149,16 @@ public class FramePrincipal extends JFrame {
 
         this.recuadro = recuadro;
         pnl1.removeAll();
-        pnl2.removeAll();
 
         jMI2.setEnabled(true);
 
         txa = new JTextArea();
-        txa.setPreferredSize(new Dimension(SIZE_PANEL - 6, SIZE_PANEL - 6));
         txa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        pnl1.add(txa);
-        pnl2.setLayout(new GridLayout(recuadro.length, recuadro[0].length));
+        scp1.setViewportView(txa);
+        pnl1.setLayout(new GridLayout(recuadro.length, recuadro[0].length));
         for (int i = 0; i < recuadro.length; i++) {
             for (int j = 0; j < recuadro[0].length; j++) {
-                pnl2.add(recuadro[i][j]);
+                pnl1.add(recuadro[i][j]);
             }
         }
 
@@ -222,6 +223,7 @@ public class FramePrincipal extends JFrame {
         }
 
         txa.setText(textoTotal);
+        cerrarDialogs();
     }
 
     private void cerrarDialogs() {
