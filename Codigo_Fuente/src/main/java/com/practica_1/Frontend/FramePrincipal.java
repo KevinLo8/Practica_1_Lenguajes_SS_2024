@@ -16,9 +16,9 @@ public class FramePrincipal extends JFrame {
 
     private AutomataAnalizador analizador;
     private Thread hiloAnalizador;
-    private JLabel[][] recuadro;
+    private JPanel[][] recuadro;
 
-    private Recuadro[] token;
+    private Recuadro[] tokens;
 
     private DialogEspacio dialogEspacio;
     private JPanel pnl1, pnl2;
@@ -34,8 +34,8 @@ public class FramePrincipal extends JFrame {
      */
     public FramePrincipal(){
 
-        token = new Recuadro[0];
-        analizador = new AutomataAnalizador(this, token);
+        tokens = new Recuadro[0];
+        analizador = new AutomataAnalizador(this);
         hiloAnalizador = new Thread(analizador);
 
         initComponentes();
@@ -119,12 +119,8 @@ public class FramePrincipal extends JFrame {
         return SIZE_PANEL;
     }
 
-    public JLabel[][] getRecuadro() {
+    public JPanel[][] getRecuadro() {
         return recuadro;
-    }
-
-    public void setToken(Recuadro[] recuadros) {
-        this.token = recuadros;
     }
 
     public void preguntarTamaño() {
@@ -135,7 +131,7 @@ public class FramePrincipal extends JFrame {
         dialogEspacio.setVisible(true);    
     }
 
-    public void crearEdicion(JLabel[][] recuadro) {
+    public void crearEdicion(JPanel[][] recuadro) {
         this.recuadro = recuadro;
         pnl1.removeAll();
         pnl2.removeAll();
@@ -147,23 +143,47 @@ public class FramePrincipal extends JFrame {
         for (int i = 0; i < recuadro.length; i++) {
             for (int j = 0; j < recuadro[0].length; j++) {
                 pnl2.add(recuadro[i][j]);
-
             }
         }
 
         analizador.setTxa(txa);
-        hiloAnalizador.start();
+        if (!hiloAnalizador.isAlive()) {
+            hiloAnalizador.start();
+        } else {
+        }
+        
 
         repaint();
         validate();
     }
 
     public void imprimirTamaño(){
-        System.out.println(token.length);
+        System.out.println(tokens.length);
     }
 
-    public void pintarRecuadros(Recuadro[] token2) {
+    public void pintarRecuadros(Recuadro[] tokens) {
+        this.tokens = tokens;
+        int numero = 0;
 
+        for (int i = 0; i < recuadro.length; i++) {
+            for (int j = 0; j < recuadro[0].length; j++) {
+                numero = hayTokens(numero);
+                if (numero != tokens.length) {
+                    recuadro[i][j].setBackground(Color.decode(tokens[numero].getColor()));
+                } else {
+                    recuadro[i][j].setBackground(Color.WHITE);
+                }
+                numero++;
+            }
+        }
     }
 
+    private int hayTokens(int numero) {
+        for (int i = numero; i < tokens.length; i++) {
+            if (tokens[i].getToken() != null) {
+                return numero;
+            }
+        }
+        return tokens.length;
+    }
 }

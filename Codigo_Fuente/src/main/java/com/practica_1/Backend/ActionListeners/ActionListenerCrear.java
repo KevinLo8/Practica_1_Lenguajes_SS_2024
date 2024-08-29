@@ -29,7 +29,7 @@ public class ActionListenerCrear implements ActionListener {
         int alto = Integer.valueOf((String) cbx1.getSelectedItem());
         int ancho  = Integer.valueOf((String) cbx2.getSelectedItem());
 
-        JLabel[][] recuadro = new JLabel[alto][ancho];
+        JPanel[][] recuadro = new JPanel[alto][ancho];
 
         int tamaño;
         if (alto > ancho) {
