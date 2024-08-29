@@ -6,11 +6,11 @@ import java.awt.Dimension;
 import javax.swing.*;
 
 
-public class LabelRecuadro extends JPanel {
+public class PanelRecuadro extends JPanel {
 
 
-    public LabelRecuadro(int tamaño) {
-        setPreferredSize(new Dimension(tamaño - 2, tamaño - 2));
+    public PanelRecuadro(int tamaño) {
+        setPreferredSize(new Dimension(tamaño, tamaño));
         setBackground(Color.WHITE);
     }
     

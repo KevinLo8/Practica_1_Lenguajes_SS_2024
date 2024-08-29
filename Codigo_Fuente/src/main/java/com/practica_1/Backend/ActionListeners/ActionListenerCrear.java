@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import com.practica_1.Frontend.FramePrincipal;
 import com.practica_1.Frontend.JDialog.DialogEspacio;
-import com.practica_1.Frontend.JLabel.LabelRecuadro;
+import com.practica_1.Frontend.JLabel.PanelRecuadro;
 
 public class ActionListenerCrear implements ActionListener {
 
@@ -40,7 +40,7 @@ public class ActionListenerCrear implements ActionListener {
 
         for (int i = 0; i < alto; i++) {
             for (int j = 0; j < ancho; j++) {
-                LabelRecuadro lbl = new LabelRecuadro(tamaño);
+                PanelRecuadro lbl = new PanelRecuadro(tamaño);
                 lbl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 recuadro[i][j] = lbl;
             }

@@ -1,34 +1,28 @@
 package com.practica_1.Frontend.JDialog;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 import com.practica_1.Backend.ActionListeners.*;
 import com.practica_1.Frontend.FramePrincipal;
 
-public class DialogSeleccionArchivo extends JDialog {
+public class DialogBorrarTexto extends JDialog {
 
     FramePrincipal frame;
 
-    public DialogSeleccionArchivo(FramePrincipal frame) {
+    public DialogBorrarTexto(FramePrincipal frame, String texto) {
         super(frame);
         this.frame = frame;
 
-        initComponets();
+        initComponets(texto);
 
     }
 
-    private void initComponets() {
+    private void initComponets(String texto) {
 
-        JTextField txf1 = new JTextField();
-        txf1.setPreferredSize(new Dimension(300, 25));
+        JLabel lbl1 = new JLabel("Quiere borrar el texto escrito:");
 
-        JButton btn1 = new JButton("Seleccionar");
-        JButton btn2 = new JButton("Cargar");
-
-        JLabel lbl1 = new JLabel(" ");
-        lbl1.setForeground(new Color(255, 0, 0));
+        JButton btn1 = new JButton("Si");
+        JButton btn2 = new JButton("No");
 
         String[] numeros = new String[19];
 
@@ -36,8 +30,8 @@ public class DialogSeleccionArchivo extends JDialog {
             numeros[i - 2] = String.valueOf(i);
         }
 
-        btn1.addActionListener(new ActionListenerSeleccionar(txf1));
-        btn2.addActionListener(new ActionListenerCargar(frame, lbl1, txf1));
+        btn1.addActionListener(new ActionListenerBorrar(frame, texto));
+        btn2.addActionListener(new ActionListenerBorrar(frame, texto));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -46,12 +40,12 @@ public class DialogSeleccionArchivo extends JDialog {
             layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txf1)
-                        .addComponent(btn1)
-                    )
                     .addComponent(lbl1)
-                    .addComponent(btn2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btn1)
+                        .addGap(40)
+                        .addComponent(btn2)
+                    )
                 )
                 .addContainerGap(20, Short.MAX_VALUE)
         );
@@ -59,13 +53,12 @@ public class DialogSeleccionArchivo extends JDialog {
         layout.setVerticalGroup(
             layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(txf1)
-                    .addComponent(btn1)
-                )
                 .addComponent(lbl1)
-                .addGap(10)
-                .addComponent(btn2)
+                .addGap(20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(btn1)
+                    .addComponent(btn2)
+                )
                 .addContainerGap(20, Short.MAX_VALUE)
         );
 
