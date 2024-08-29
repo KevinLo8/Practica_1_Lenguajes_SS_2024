@@ -1,17 +1,17 @@
 package com.practica_1.Frontend.JLabel;
 
+import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.*;
 
-import com.practica_1.Backend.Colores.Colores;
-import com.practica_1.Backend.Recuadro.Recuadro;
 
-public class LabelRecuadro extends JLabel {
+public class LabelRecuadro extends JPanel {
 
-    private Recuadro recuadro;
 
     public LabelRecuadro(int tamaño) {
-        recuadro = new Recuadro();
-        setIcon(recuadro.retornarImagen(Colores.FFFFFF, tamaño - 2));
+        setPreferredSize(new Dimension(tamaño - 2, tamaño - 2));
+        setBackground(Color.WHITE);
     }
     
 }

@@ -2,14 +2,14 @@ package com.practica_1.Frontend.JDialog;
 
 import javax.swing.*;
 
-import com.practica_1.Backend.ActionListeners.ActionListenerCrear;
+import com.practica_1.Backend.ActionListeners.*;
 import com.practica_1.Frontend.FramePrincipal;
 
-public class DialogEspacio extends JDialog {
+public class DialogSeleccionArchivo extends JDialog {
 
     FramePrincipal frame;
 
-    public DialogEspacio(FramePrincipal frame) {
+    public DialogSeleccionArchivo(FramePrincipal frame) {
         super(frame);
         this.frame = frame;
 
@@ -17,13 +17,12 @@ public class DialogEspacio extends JDialog {
 
     }
 
-    @SuppressWarnings("rawtypes")
     private void initComponets() {
 
-        JLabel lbl1 = new JLabel("Seleccione el alto de cuadro");
-        JLabel lbl2 = new JLabel("Seleccione el ancho de cuadro");
+        JTextField txf1 = new JTextField();
 
-        JButton btn1 = new JButton("Crear");
+        JButton btn1 = new JButton("Seleccionar");
+        JButton btn2 = new JButton("cargar");
 
         String[] numeros = new String[19];
 
@@ -31,10 +30,7 @@ public class DialogEspacio extends JDialog {
             numeros[i - 2] = String.valueOf(i);
         }
 
-        JComboBox cbx1 = new JComboBox<String>(numeros);
-        JComboBox cbx2 = new JComboBox<String>(numeros);
-
-        btn1.addActionListener(new ActionListenerCrear(frame, this, cbx1, cbx2));
+        btn1.addActionListener(new ActionListenerSeleccionar(frame, txf1));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -43,11 +39,11 @@ public class DialogEspacio extends JDialog {
             layout.createSequentialGroup()
                 .addContainerGap(10, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl1)
-                    .addComponent(cbx1)
-                    .addComponent(lbl2)
-                    .addComponent(cbx2)
-                    .addComponent(btn1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txf1)
+                        .addComponent(btn1)
+                    )
+                    .addComponent(btn2)
                 )
                 .addContainerGap(10, Short.MAX_VALUE)
         );
@@ -55,15 +51,12 @@ public class DialogEspacio extends JDialog {
         layout.setVerticalGroup(
             layout.createSequentialGroup()
                 .addContainerGap(10, Short.MAX_VALUE)
-                .addComponent(lbl1)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(txf1)
+                    .addComponent(btn1)
+                )
                 .addGap(10)
-                .addComponent(cbx1)
-                .addGap(10)
-                .addComponent(lbl2)
-                .addGap(10)
-                .addComponent(cbx2)
-                .addGap(10)
-                .addComponent(btn1)
+                .addComponent(btn2)
                 .addContainerGap(10, Short.MAX_VALUE)
         );
 

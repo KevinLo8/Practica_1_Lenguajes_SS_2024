@@ -3,7 +3,7 @@ package com.practica_1.Backend.AutomataAnalizador;
 import javax.swing.*;
 
 import com.practica_1.Backend.Recuadro.Recuadro;
-import com.practica_1.Backend.Tokens.Tokens;
+import com.practica_1.Backend.TokensData.TokensData;
 import com.practica_1.Frontend.FramePrincipal;
 
 public class AutomataAnalizador implements Runnable {
@@ -13,11 +13,10 @@ public class AutomataAnalizador implements Runnable {
 
     private FramePrincipal frame;
     private JTextArea txa;
-    private Recuadro[] token;
+    private Recuadro[] tokens;
 
-    public AutomataAnalizador(FramePrincipal frame, Recuadro[] token) {
+    public AutomataAnalizador(FramePrincipal frame) {
         this.frame = frame;
-        this.token = token;
     }
 
     @Override
@@ -25,15 +24,15 @@ public class AutomataAnalizador implements Runnable {
 
         try {
             do {
-                String oracion = txa.getText();
+                tokens = new Recuadro[0];
 
-                String[] palabras = serpararTokens(oracion);
+                String[] lineas = txa.getText().split("\\n");
 
-                int alto = frame.getRecuadro().length;
-                int ancho = frame.getRecuadro()[0].length;
-                token = revisarTokens(palabras, alto, ancho);
+                serpararTokens(lineas);
 
-                frame.pintarRecuadros(token);
+                revisarTokens();
+
+                frame.pintarRecuadros(tokens);
 
                 Thread.sleep(50);
             } while (true);
@@ -47,85 +46,92 @@ public class AutomataAnalizador implements Runnable {
         this.txa = txa;
     }
 
-    private String[] serpararTokens(String oracion) {
+    private void serpararTokens(String[] lineas) {
 
-        String[] palabras = new String[0];
+        int numero = 1;
         int i = 0;
 
-        while (i < oracion.length()) {
-            char caracter = oracion.charAt(i);
-            String palabra = "" + caracter;
-            if (caracter == ' ') {
-                i++;
-            } else {
-                if (caracter == '"') {
-                    palabra = extraerCadena(oracion, palabra, i);
-                    i += palabra.length();
-                } else if (esNumero(caracter)) {
-                    palabra = extraerNumero(oracion, palabra, i);
-                    i += palabra.length();
-                } else if (esSigno(caracter)) {
-                    i += palabra.length();
-                } else if (esSignoDoble(caracter)) {
-                    palabra = extraerSignoDoble(oracion, palabra, i);
-                    i += palabra.length();
+        for (int j = 0; j < lineas.length; j++) {
+            String linea = lineas[j];
+            numero = 1;
+            i = 0;
+            while (i < linea.length()) {
+                char caracter = linea.charAt(i);
+                String palabra = "" + caracter;
+                if (caracter == ' ') {
+                    i++;
                 } else {
-                    palabra = extraerPalabra(oracion, palabra, i);
-                    i += palabra.length();
+                    if (caracter == '"') {
+                        palabra = extraerCadena(linea, palabra, i);
+                        i += palabra.length();
+                    } else if (esNumero(caracter)) {
+                        palabra = extraerNumero(linea, palabra, i);
+                        i += palabra.length();
+                    } else if (caracter == 39) {
+                        palabra = extraerComilla(linea, palabra, i);
+                        i += palabra.length();
+                    } else if (esSigno(caracter)) {
+                        i += palabra.length();
+                    } else if (esSignoDoble(caracter)) {
+                        palabra = extraerSignoDoble(linea, palabra, i);
+                        i += palabra.length();
+                    } else {
+                        palabra = extraerPalabra(linea, palabra, i);
+                        i += palabra.length();
+                    }
+                    agregarPalabra(palabra, j + 1, numero);
+                    numero++;
                 }
-                palabras = agregarPalabra(palabras, palabra);
-            }
+            }    
         }
-
-        return palabras;
     }
 
-    private String extraerCadena(String oracion, String palabra, int index){
+    private String extraerCadena(String linea, String palabra, int index){
         char caracter;
         try {
             do {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;
-            } while (oracion.charAt(index) != '"');
+            } while (linea.charAt(index) != '"');
         } catch (IndexOutOfBoundsException e) {
         }
 
         return palabra;
     }
 
-    private String extraerPalabra(String oracion, String palabra, int index){
+    private String extraerPalabra(String linea, String palabra, int index){
         char caracter;
         try {
-            while (esLetra(oracion.charAt(index))) {
+            while (esLetra(linea.charAt(index + 1))) {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;
             }
         } catch (IndexOutOfBoundsException e) {
         }
         switch (palabra) {
             case "Console":
-                extraerConsole(oracion, palabra, index);
+                extraerConsole(linea, palabra, index);
                 break;
             case "Square":
-                extraerSquare(oracion, palabra, index);
+                extraerSquare(linea, palabra, index);
                 break;
         }
         return palabra;
     }
 
-    private String extraerConsole(String oracion, String palabra, int index){
+    private String extraerConsole(String linea, String palabra, int index){
         char caracter = 0;
         try {
             for (int i = 0; i < 10; i++) {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;    
             }
-            if (oracion.charAt(index - 7) == 'W') {
+            if (linea.charAt(index - 7) == 'W') {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;    
             }
         } catch (IndexOutOfBoundsException e) {
@@ -134,18 +140,18 @@ public class AutomataAnalizador implements Runnable {
         return palabra;
     }
 
-    private String extraerSquare(String oracion, String palabra, int index){
+    private String extraerSquare(String linea, String palabra, int index){
         char caracter;
         try {
             for (int i = 0; i < 6; i++) {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;
             }
-            if (oracion.charAt(index + 1) == '(') {
+            if (linea.charAt(index + 1) == '(') {
                 do {
                     index++;
-                    caracter = oracion.charAt(index);
+                    caracter = linea.charAt(index);
                     palabra = palabra + caracter;    
                 } while (caracter != ')');
             }
@@ -154,12 +160,12 @@ public class AutomataAnalizador implements Runnable {
         return palabra;
     }
 
-    private String extraerNumero(String oracion, String palabra, int index){
+    private String extraerNumero(String linea, String palabra, int index){
         char caracter;
         try {
-            while (esNumero(oracion.charAt(index + 1)) && oracion.charAt(index + 1) != '.') {
+            while (esNumero(linea.charAt(index + 1)) || linea.charAt(index + 1) == '.') {
                 index++;
-                caracter = oracion.charAt(index);
+                caracter = linea.charAt(index);
                 palabra = palabra + caracter;
             }
         } catch (IndexOutOfBoundsException e) {
@@ -168,11 +174,33 @@ public class AutomataAnalizador implements Runnable {
         return palabra;
     }
 
-    private String extraerSignoDoble(String oracion, String palabra, int index){
+    private String extraerComilla(String linea, String palabra, int index){
+        char caracter = 0;
+        try {
+            for (int i = 0; i < 2; i++) {
+                index++;
+                caracter = linea.charAt(index);
+                palabra = palabra + caracter; 
+            }
+
+            if (caracter != 39) {
+                for (int i = index; i < linea.length(); i++) {
+                    index++;
+                    caracter = linea.charAt(index);
+                    palabra = palabra + caracter; 
+                }    
+            }
+        } catch (IndexOutOfBoundsException e) {
+        }
+
+        return palabra;
+    }
+
+    private String extraerSignoDoble(String linea, String palabra, int index){
         char caracter;
         index++;
         try {
-            caracter = oracion.charAt(index);
+            caracter = linea.charAt(index);
             if (caracter == '=' || caracter == '>') {
                 palabra = palabra + caracter;
             }     
@@ -183,9 +211,9 @@ public class AutomataAnalizador implements Runnable {
     }
 
     private Boolean esLetra(char caracter) {
-        if (caracter > '@' || caracter < '[') {
+        if (caracter > '@' && caracter < '[') {
             return true;
-        } else if (caracter > '`' || caracter < '{') {
+        } else if (caracter > '`' && caracter < '{') {
             return true; 
         } else {
             return false;
@@ -220,28 +248,35 @@ public class AutomataAnalizador implements Runnable {
         return false;
     }
 
-    private String[] agregarPalabra(String[] palabras, String palabra) {
-        String[] retorno = new String[palabras.length + 1];
+    private void agregarPalabra(String palabra, int linea, int columna) {
+        Recuadro[] save = new Recuadro[tokens.length];
 
-        for (int i = 0; i < palabras.length; i++) {
-            retorno[i] = palabras[i];
+        for (int i = 0; i < tokens.length; i++) {
+            save[i] = tokens[i];
         }
 
-        retorno[palabras.length] = palabra;
+        tokens = new Recuadro[save.length + 1];
 
-        return retorno;
+        for (int i = 0; i < save.length; i++) {
+            tokens[i] = save[i];
+        }
+
+        Recuadro recuadro = new Recuadro();
+        recuadro.setLexema(palabra);
+        recuadro.setLinea(linea);
+        recuadro.setColumna(columna);
+
+        tokens[tokens.length - 1] = recuadro;
     }
 
-    private Recuadro[] revisarTokens(String[] palabras, int alto, int ancho){
-        Recuadro[] retorno = null;
-        Tokens tokens = new Tokens();
+    private void revisarTokens(){
+        TokensData tokensData = new TokensData();
 
-        for (int i = 0; i < palabras.length; i++) {
-            Recuadro recuadro = new Recuadro();
-            recuadro.setLexema(palabras[i]);
-            recuadro.setToken(tokens.compararToken(palabras[i]));
+        for (int i = 0; i < tokens.length; i++) {
+            String lexema = tokens[i].getLexema();
+            tokens[i].setToken(tokensData.compararToken(lexema));
+            String token = tokens[i].getToken();
+            tokens[i].setColor(tokensData.retornarColor(token));
         }
-
-        return retorno;
     }
 }
