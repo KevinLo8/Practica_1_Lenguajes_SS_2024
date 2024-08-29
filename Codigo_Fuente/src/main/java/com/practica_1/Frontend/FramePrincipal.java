@@ -4,13 +4,16 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.practica_1.Backend.ActionListeners.ActionListenerArchivo;
 import com.practica_1.Backend.ActionListeners.ActionListenerImagen;
 import com.practica_1.Backend.ActionListeners.ActionListenerNuevo;
 import com.practica_1.Backend.ActionListeners.ActionListenerReporte;
 import com.practica_1.Backend.ActionListeners.ActionListenerSalir;
 import com.practica_1.Backend.AutomataAnalizador.AutomataAnalizador;
 import com.practica_1.Backend.Recuadro.Recuadro;
+import com.practica_1.Frontend.JDialog.DialogBorrarTexto;
 import com.practica_1.Frontend.JDialog.DialogEspacio;
+import com.practica_1.Frontend.JDialog.DialogSeleccionArchivo;
 
 public class FramePrincipal extends JFrame {
 
@@ -21,7 +24,11 @@ public class FramePrincipal extends JFrame {
     private Recuadro[] tokens;
 
     private DialogEspacio dialogEspacio;
+    private DialogSeleccionArchivo dialogSeleccionArchivo;
+    private DialogBorrarTexto dialogBorrarTexto;
     private JPanel pnl1, pnl2;
+    private JMenuItem jMI1, jMI2, jMI3, jMI4, jMI5;
+    private JTextArea txa;
 
     //Se crea una constante con la dimension del la pantalla
     private final Dimension DIMENSION = Toolkit.getDefaultToolkit().getScreenSize();
@@ -61,22 +68,28 @@ public class FramePrincipal extends JFrame {
         jMenuBar.add(jM2);
 
         //Se generan los botones del menu
-        JMenuItem jMI1 = new JMenuItem("Nueva edición");
-        JMenuItem jMI2 = new JMenuItem("Salir");
-        JMenuItem jMI3 = new JMenuItem("Generar reporte");
-        JMenuItem jMI4 = new JMenuItem("Generar imagen");
+        jMI1 = new JMenuItem("Nueva edición");
+        jMI2 = new JMenuItem("Cargar Archivo");
+        jMI3 = new JMenuItem("Salir");
+        jMI4 = new JMenuItem("Generar reporte");
+        jMI5 = new JMenuItem("Generar imagen");
+
+        //Se deshabilita el boton para cargar archivos
+        //jMI2.setEnabled(false);
 
         //Se agregan los listeners a los botones
         jMI1.addActionListener(new ActionListenerNuevo(this)); 
-        jMI2.addActionListener(new ActionListenerSalir());
-        jMI3.addActionListener(new ActionListenerReporte());
-        jMI4.addActionListener(new ActionListenerImagen());
+        jMI2.addActionListener(new ActionListenerArchivo(this)); 
+        jMI3.addActionListener(new ActionListenerSalir());
+        jMI4.addActionListener(new ActionListenerReporte());
+        jMI5.addActionListener(new ActionListenerImagen());
                 
         //Se arma la barra de menú
         jM1.add(jMI1);
         jM1.add(jMI2);
-        jM2.add(jMI3);
+        jM1.add(jMI3);
         jM2.add(jMI4);
+        jM2.add(jMI5);
 
         //Se agrega la barra de menú al frame
         setJMenuBar(jMenuBar);
@@ -124,18 +137,20 @@ public class FramePrincipal extends JFrame {
     }
 
     public void preguntarTamaño() {
-        if (dialogEspacio != null) {
-            dialogEspacio.dispose();    
-        }
+        cerrarDialogs();
         dialogEspacio = new DialogEspacio(this);
         dialogEspacio.setVisible(true);    
     }
 
     public void crearEdicion(JPanel[][] recuadro) {
+
         this.recuadro = recuadro;
         pnl1.removeAll();
         pnl2.removeAll();
-        JTextArea txa = new JTextArea();
+
+        jMI2.setEnabled(true);
+
+        txa = new JTextArea();
         txa.setPreferredSize(new Dimension(SIZE_PANEL - 6, SIZE_PANEL - 6));
         txa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         pnl1.add(txa);
@@ -155,10 +170,6 @@ public class FramePrincipal extends JFrame {
 
         repaint();
         validate();
-    }
-
-    public void imprimirTamaño(){
-        System.out.println(tokens.length);
     }
 
     public void pintarRecuadros(Recuadro[] tokens) {
@@ -185,5 +196,43 @@ public class FramePrincipal extends JFrame {
             }
         }
         return tokens.length;
+    }
+
+    public void preguntarArchivo() {
+        cerrarDialogs();
+        dialogSeleccionArchivo = new DialogSeleccionArchivo(this);
+        dialogSeleccionArchivo.setVisible(true);    
+    }
+
+    public void preguntarBorrar(String texto) {
+        cerrarDialogs();
+        dialogBorrarTexto = new DialogBorrarTexto(this, texto);
+        dialogBorrarTexto.setVisible(true);
+    }
+
+    public void borrarTextArea(String texto, String opcion) {
+        String textoTotal = null;
+        switch (opcion) {
+            case "Si":
+                textoTotal = texto;
+                break;
+            case "No":
+                textoTotal = txa.getText() + texto;
+                break;
+        }
+
+        txa.setText(textoTotal);
+    }
+
+    private void cerrarDialogs() {
+        if (dialogSeleccionArchivo != null) {
+            dialogSeleccionArchivo.dispose();    
+        }
+        if (dialogEspacio != null) {
+            dialogEspacio.dispose();    
+        }
+        if (dialogBorrarTexto != null) {
+            dialogBorrarTexto.dispose();    
+        }
     }
 }
