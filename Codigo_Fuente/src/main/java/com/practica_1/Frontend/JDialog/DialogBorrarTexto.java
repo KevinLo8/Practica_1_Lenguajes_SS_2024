@@ -24,12 +24,6 @@ public class DialogBorrarTexto extends JDialog {
         JButton btn1 = new JButton("Si");
         JButton btn2 = new JButton("No");
 
-        String[] numeros = new String[19];
-
-        for (int i = 2; i < 21; i++) {
-            numeros[i - 2] = String.valueOf(i);
-        }
-
         btn1.addActionListener(new ActionListenerBorrar(frame, texto));
         btn2.addActionListener(new ActionListenerBorrar(frame, texto));
 

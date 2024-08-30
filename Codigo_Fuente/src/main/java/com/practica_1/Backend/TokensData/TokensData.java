@@ -82,8 +82,6 @@ public class TokensData {
             return "Asignación Simple";
         } else if (perteneceA(token, asignacionCompuesta)) {
             return "Asignación Compuesta";
-        } else if (perteneceA(token, palabraReservada)) {
-            return "Palabre Reservada";
         } else if (perteneceA(token, Booleano)) {
             return "Booleano";
         } else if (perteneceA(token, parentesis)) {
@@ -96,6 +94,12 @@ public class TokensData {
             return "Coma";
         } else if (token.equals(punto)) {
             return "Punto";
+        } else if (esLetra(token.charAt(0))) {
+            if (perteneceA(token, palabraReservada)) {
+                return "Palabra Reservada";
+            } else {
+                return "Identificador";
+            }
         }
         return null;
     }
@@ -107,6 +111,16 @@ public class TokensData {
             }
         }
         return false;
+    }
+
+    private Boolean esLetra(char caracter) {
+        if (caracter > '@' && caracter < '[') {
+            return true;
+        } else if (caracter > '`' && caracter < '{') {
+            return true; 
+        } else {
+            return false;
+        }
     }
 
     public String retornarColor(String token) {
@@ -150,7 +164,7 @@ public class TokensData {
                 return "#41D9D4";
             case "Asignación Compuesta":
                 return "#FFFFFF";
-            case "Palabre Reservada":
+            case "Palabra Reservada":
                 return "#60A917";
             case "Entero":
                 return "#1BA1E2";
@@ -174,6 +188,8 @@ public class TokensData {
                 return "#B79ADB";
             case "Punto":
                 return "#9ADBA6";
+            case "Identificador":
+                return "#FFD300";
         }
         return null;
 
