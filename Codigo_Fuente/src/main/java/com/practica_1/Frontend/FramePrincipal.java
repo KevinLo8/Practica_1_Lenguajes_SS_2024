@@ -13,6 +13,7 @@ import com.practica_1.Backend.AutomataAnalizador.AutomataAnalizador;
 import com.practica_1.Backend.Recuadro.Recuadro;
 import com.practica_1.Frontend.JDialog.DialogBorrarTexto;
 import com.practica_1.Frontend.JDialog.DialogEspacio;
+import com.practica_1.Frontend.JDialog.DialogReporte;
 import com.practica_1.Frontend.JDialog.DialogSeleccionArchivo;
 
 public class FramePrincipal extends JFrame {
@@ -26,6 +27,7 @@ public class FramePrincipal extends JFrame {
     private DialogEspacio dialogEspacio;
     private DialogSeleccionArchivo dialogSeleccionArchivo;
     private DialogBorrarTexto dialogBorrarTexto;
+    private DialogReporte dialogReporte;
     private JPanel pnl1;
     private JScrollPane scp1;
     private JMenuItem jMI1, jMI2, jMI3, jMI4, jMI5;
@@ -75,14 +77,15 @@ public class FramePrincipal extends JFrame {
         jMI4 = new JMenuItem("Generar reporte");
         jMI5 = new JMenuItem("Generar imagen");
 
-        //Se deshabilita el boton para cargar archivos
+        //Se deshabilitan los botones requeridos
         jMI2.setEnabled(false);
+        jMI4.setEnabled(false);
 
         //Se agregan los listeners a los botones
         jMI1.addActionListener(new ActionListenerNuevo(this)); 
         jMI2.addActionListener(new ActionListenerArchivo(this)); 
         jMI3.addActionListener(new ActionListenerSalir());
-        jMI4.addActionListener(new ActionListenerReporte());
+        jMI4.addActionListener(new ActionListenerReporte(this));
         jMI5.addActionListener(new ActionListenerImagen());
                 
         //Se arma la barra de menú
@@ -151,6 +154,7 @@ public class FramePrincipal extends JFrame {
         pnl1.removeAll();
 
         jMI2.setEnabled(true);
+        jMI4.setEnabled(true);
 
         txa = new JTextArea();
         txa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -226,7 +230,7 @@ public class FramePrincipal extends JFrame {
         cerrarDialogs();
     }
 
-    private void cerrarDialogs() {
+    public void cerrarDialogs() {
         if (dialogSeleccionArchivo != null) {
             dialogSeleccionArchivo.dispose();    
         }
@@ -236,5 +240,14 @@ public class FramePrincipal extends JFrame {
         if (dialogBorrarTexto != null) {
             dialogBorrarTexto.dispose();    
         }
+        if (dialogReporte != null) {
+            dialogReporte.dispose();    
+        }
+    }
+
+    public void mostrarReporte() {
+        cerrarDialogs();
+        dialogReporte = new DialogReporte(this, tokens);
+        dialogReporte.setVisible(true);    
     }
 }

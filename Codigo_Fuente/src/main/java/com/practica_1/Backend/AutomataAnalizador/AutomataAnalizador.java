@@ -103,7 +103,7 @@ public class AutomataAnalizador implements Runnable {
     private String extraerPalabra(String linea, String palabra, int index){
         char caracter;
         try {
-            while (esLetra(linea.charAt(index + 1))) {
+            while (esLetra(linea.charAt(index + 1)) || esNumero(linea.charAt(index + 1)) || linea.charAt(index + 1) == '_') {
                 index++;
                 caracter = linea.charAt(index);
                 palabra = palabra + caracter;
