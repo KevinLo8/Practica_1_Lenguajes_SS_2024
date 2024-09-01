@@ -6,30 +6,23 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.practica_1.Frontend.FramePrincipal;
-import com.practica_1.Frontend.JDialog.DialogEspacio;
 import com.practica_1.Frontend.JLabel.PanelRecuadro;
 
 public class ActionListenerCrear implements ActionListener {
 
     private FramePrincipal framePrincipal;
-    @SuppressWarnings("rawtypes")
-    private JComboBox cbx1, cbx2;
-    private DialogEspacio dialogEspacio;
+    private int alto, ancho;
 
-    @SuppressWarnings("rawtypes")
-    public ActionListenerCrear(FramePrincipal framePrincipal, DialogEspacio dialogEspacio, JComboBox cbx1, JComboBox cbx2) {
+    public ActionListenerCrear(FramePrincipal framePrincipal, int alto, int ancho) {
         this.framePrincipal = framePrincipal;
-        this.dialogEspacio = dialogEspacio;
-        this.cbx1 = cbx1;
-        this.cbx2 = cbx2;
+        this.alto = alto;
+        this.ancho = ancho;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int alto = Integer.valueOf((String) cbx1.getSelectedItem());
-        int ancho  = Integer.valueOf((String) cbx2.getSelectedItem());
 
-        JPanel[][] recuadro = new JPanel[alto][ancho];
+        PanelRecuadro[][] recuadro = new PanelRecuadro[alto][ancho];
 
         int tamaño;
         if (alto > ancho) {
@@ -40,13 +33,12 @@ public class ActionListenerCrear implements ActionListener {
 
         for (int i = 0; i < alto; i++) {
             for (int j = 0; j < ancho; j++) {
-                PanelRecuadro lbl = new PanelRecuadro(tamaño);
+                PanelRecuadro lbl = new PanelRecuadro(tamaño, framePrincipal);
                 lbl.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 recuadro[i][j] = lbl;
             }
         }
         framePrincipal.crearEdicion(recuadro);
-        dialogEspacio.dispose();
     }
 
 }

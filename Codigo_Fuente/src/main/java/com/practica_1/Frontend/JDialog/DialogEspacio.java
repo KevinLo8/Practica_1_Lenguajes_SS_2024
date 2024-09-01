@@ -34,7 +34,7 @@ public class DialogEspacio extends JDialog {
         JComboBox cbx1 = new JComboBox<String>(numeros);
         JComboBox cbx2 = new JComboBox<String>(numeros);
 
-        btn1.addActionListener(new ActionListenerCrear(frame, this, cbx1, cbx2));
+        btn1.addActionListener(new ActionListenerCrear(frame, Integer.valueOf((String)cbx1.getSelectedItem()), Integer.valueOf((String) cbx2.getSelectedItem())));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
