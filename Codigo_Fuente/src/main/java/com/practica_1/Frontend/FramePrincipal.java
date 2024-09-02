@@ -4,23 +4,17 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.practica_1.Backend.ActionListeners.ActionListenerArchivo;
-import com.practica_1.Backend.ActionListeners.ActionListenerImagen;
-import com.practica_1.Backend.ActionListeners.ActionListenerNuevo;
-import com.practica_1.Backend.ActionListeners.ActionListenerReporte;
-import com.practica_1.Backend.ActionListeners.ActionListenerSalir;
+import com.practica_1.Backend.ActionListeners.*;
 import com.practica_1.Backend.AutomataAnalizador.AutomataAnalizador;
 import com.practica_1.Backend.Recuadro.Recuadro;
-import com.practica_1.Frontend.JDialog.DialogBorrarTexto;
-import com.practica_1.Frontend.JDialog.DialogEspacio;
-import com.practica_1.Frontend.JDialog.DialogReporte;
-import com.practica_1.Frontend.JDialog.DialogSeleccionArchivo;
+import com.practica_1.Frontend.JDialog.*;
+import com.practica_1.Frontend.JLabel.PanelRecuadro;
 
 public class FramePrincipal extends JFrame {
 
     private AutomataAnalizador analizador;
     private Thread hiloAnalizador;
-    private JPanel[][] recuadro;
+    private PanelRecuadro[][] recuadro;
 
     private Recuadro[] tokens;
 
@@ -28,6 +22,7 @@ public class FramePrincipal extends JFrame {
     private DialogSeleccionArchivo dialogSeleccionArchivo;
     private DialogBorrarTexto dialogBorrarTexto;
     private DialogReporte dialogReporte;
+    private DialogInfo dialogInfo;
     private JPanel pnl1;
     private JScrollPane scp1;
     private JMenuItem jMI1, jMI2, jMI3, jMI4, jMI5;
@@ -148,7 +143,8 @@ public class FramePrincipal extends JFrame {
         dialogEspacio.setVisible(true);    
     }
 
-    public void crearEdicion(JPanel[][] recuadro) {
+    public void crearEdicion(PanelRecuadro[][] recuadro) {
+        cerrarDialogs();
 
         this.recuadro = recuadro;
         pnl1.removeAll();
@@ -186,8 +182,10 @@ public class FramePrincipal extends JFrame {
                 numero = hayTokens(numero);
                 if (numero != tokens.length) {
                     recuadro[i][j].setBackground(Color.decode(tokens[numero].getColor()));
+                    recuadro[i][j].setRecuadro(tokens[numero]);
                 } else {
                     recuadro[i][j].setBackground(Color.WHITE);
+                    recuadro[i][j].setRecuadro(null);
                 }
                 numero++;
             }
@@ -243,11 +241,20 @@ public class FramePrincipal extends JFrame {
         if (dialogReporte != null) {
             dialogReporte.dispose();    
         }
+        if (dialogInfo != null) {
+            dialogInfo.dispose();    
+        }
     }
 
     public void mostrarReporte() {
         cerrarDialogs();
         dialogReporte = new DialogReporte(this, tokens);
         dialogReporte.setVisible(true);    
+    }
+
+    public void generarInfo(Recuadro token) {
+        cerrarDialogs();
+        dialogInfo = new DialogInfo(this, token);
+        dialogInfo.setVisible(true);    
     }
 }
